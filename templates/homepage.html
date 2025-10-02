@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Django Project</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #f4f4f9;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 200px;
+        }
+        .card h2 {
+            margin-bottom: 15px;
+        }
+        .card a {
+            display: inline-block;
+            padding: 10px 15px;
+            border-radius: 5px;
+            background: #4a90e2;
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h2>Patient</h2>
+            <a href="/patient/signup">Sign Up</a>
+            <a href="/patient/login">Log In</a>
+        </div>
+
+        <div class="card">
+            <h2>Doctor</h2>
+            <a href="/doctor/signup">Sign Up</a>
+            <a href="/doctor/login">Log In</a>
+        </div>
+    </div>
+</body>
+</html>
