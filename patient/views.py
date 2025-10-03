@@ -25,12 +25,6 @@ def patient_signup(request):
 
         if password != conf_password:
             return render(request, 'signup.html',{'error':'passwords do not Match ! Try again'})
-        
-        # if User.objects.filter(username = username).exists():
-        #     return render(request , 'signup.html',{'error': 'Username already exits !'})
-            
-        # if User.objects.filter(email = email).exists():
-        #     return render(request , 'signup.html',{'error':'email already exits !'})
 
         user = User.objects.create(
             first_name = first_name,
