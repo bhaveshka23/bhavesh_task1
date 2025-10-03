@@ -24,7 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('' , views.homePage , name='homepage'),
     path('patient/' , include('patient.urls')),
-    # path('doctor/' , include('doctor.urls'))
+    path('doctor/' , include('doctor.urls'))
 ]
 
 if settings.DEBUG:

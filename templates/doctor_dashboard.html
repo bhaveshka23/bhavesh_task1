@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patient Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .dashboard {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        h2 {
+            text-align: center;
+        }
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+            margin: 10px auto;
+        }
+        .info {
+            margin-top: 20px;
+        }
+        .info p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <h2>Docters Dashboard</h2>
+        <h2>Welcome, {{ user.first_name }} {{ user.last_name }}</h2>
+
+        {% if doctorInfo and doctorInfo.profile_pic %}
+            <img src="{{ doctorInfo.profile_pic.url }}" alt="Profile Picture" class="profile-pic">
+        {% else %}
+            <p style="text-align:center;">No profile picture uploaded</p>
+        {% endif %}
+
+        <div class="info">
+            <p><strong>First name:</strong> {{ user.first_name }}</p>
+            <p><strong>Last Name:</strong> {{ user.last_name }}</p>
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Address:</strong></p>
+            <p>
+                {{ doctorInfo.line1 }}<br>
+                {{ doctorInfo.city }}, {{ doctorInfo.state }} - {{ doctorInfo.pincode }}
+            </p>
+        </div>
+    </div>
+</body>
+</html>
