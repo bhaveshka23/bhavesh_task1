@@ -1,9 +1,8 @@
 from django.shortcuts import render
-
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
-from .models import DoctorData
+from .models import DoctorData , Category
 from django.contrib.auth import authenticate , login
 from django.contrib.auth.hashers import make_password
 
@@ -82,6 +81,35 @@ def doctor_dashboard(request):
     }
 
     return render(request,'doctor_dashboard.html', info)
+
+
+def createBlog(request):
+    categories = Category.objects.all()
+    if request.method == 'POST':
+        blogImage = request.FILES.get('blogImage')
+        category_id = request.POST.get('category')
+        title = request.POST.get('title')
+        summary = request.POST.get('summary')
+        content = request.POST.get('content')
+        is_draft = True if request.POST.get('is_draft') else False
+
+        category = Category.objects.get(id=category_id) if category_id else None
+
+
+        BlogPost.objects.create(
+            author = request.user,
+            title = title,
+            summary = summary,
+            content = content,
+            image = blogImage,
+            is_draft = is_draft
+        )
+
+        return redirect('my_posts')
+    
+    return render(request,'BlogCreation.html',{'cat' : categories})
+
+
 
 
 
