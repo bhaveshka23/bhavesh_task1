@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
-from .models import DoctorData , Category
-from django.contrib.auth import authenticate , login
+from .models import DoctorData , Category , BlogPost
+from django.contrib.auth import authenticate , login , logout
 from django.contrib.auth.hashers import make_password
 
 def doctor_signup(request):
@@ -83,7 +83,7 @@ def doctor_dashboard(request):
     return render(request,'doctor_dashboard.html', info)
 
 
-def createBlog(request):
+def MyBlog(request):
     categories = Category.objects.all()
     if request.method == 'POST':
         blogImage = request.FILES.get('blogImage')
@@ -95,20 +95,26 @@ def createBlog(request):
 
         category = Category.objects.get(id=category_id) if category_id else None
 
-
         BlogPost.objects.create(
             author = request.user,
             title = title,
             summary = summary,
             content = content,
             image = blogImage,
+            category = category,
             is_draft = is_draft
-        )
+        ) 
 
-        return redirect('my_posts')
-    
-    return render(request,'BlogCreation.html',{'cat' : categories})
+        return redirect('my-blogs')
 
+
+    Blogs = BlogPost.objects.filter(author=request.user).select_related('category').order_by('-id')
+    return render(request, 'doctor_blogs.html', { 'categories': categories, 'blogs': Blogs })
+
+
+def doctor_logout(request):
+    logout(request)
+    return redirect('/')
 
 
 

@@ -2,7 +2,8 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from .models import PatientData
-from django.contrib.auth import authenticate , login
+from doctor.models import BlogPost, Category
+from django.contrib.auth import authenticate , login , logout
 from django.contrib.auth.hashers import make_password
 # Create your views here.
 
@@ -66,15 +67,25 @@ def patient_login(request):
     
     return render(request,'login.html' ,{"error" :""})
 
-def Patient_dashboard(request):
-    patient = PatientData.objects.get(user= request.user)
 
-    info = {
-        "user" : request.user,
-        "patientInfo" : patient
+def Patient_dashboard(request):
+   
+    categories = Category.objects.all()
+
+    blogs = BlogPost.objects.filter(is_draft=False)
+
+    context = {
+        "user": request.user,
+        "categories": categories,
+        "blogs": blogs
     }
 
-    return render(request,'patient_dashboard.html', info)
+    return render(request, 'patient_dashboard.html', context)
+
+def patient_logout(request):
+    logout(request)
+    return redirect('/')
+
 
 
 

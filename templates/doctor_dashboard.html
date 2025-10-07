@@ -1,64 +1,193 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Patient Dashboard</title>
+    <title>Doctor Dashboard</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            padding: 20px;
+            background-color: #eef3fb;
+            margin: 0;
+            padding: 0;
         }
+
+        /* Navbar */
+        .navbar {
+            background-color: #1e88e5;
+            color: #fff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .profile-menu {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-profile-pic, .no-profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            background-color: #fff;
+            color: #1e88e5;
+        }
+
+        .nav-profile-pic {
+            object-fit: cover;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background-color: #fff;
+            min-width: 160px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 10px 15px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f0f4ff;
+        }
+
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        /* Dashboard Box */
         .dashboard {
             max-width: 600px;
-            margin: auto;
+            margin: 60px auto;
             background: #fff;
-            padding: 20px;
-            border: 1px solid #ccc;
-        }
-        h2 {
+            padding: 40px 25px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             text-align: center;
         }
-        .profile-pic {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 50%;
-            display: block;
-            margin: 10px auto;
+
+        h2 {
+            color: #1e88e5;
+            margin-bottom: 10px;
         }
-        .info {
-            margin-top: 20px;
+
+        p.welcome {
+            font-size: 17px;
+            color: #333;
+            margin-bottom: 25px;
         }
-        .info p {
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: #1e88e5;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 4px;
+            cursor: pointer;
             font-size: 16px;
-            line-height: 1.5;
+        }
+
+        .btn:hover {
+            background: #166dc1;
+        }
+
+        .quote {
+            font-style: italic;
+            color: #555;
+            font-size: 15px;
+            margin-top: 10px;
         }
     </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <div class="dashboard">
-        <a href = "/">Home</a>
-        <h2>Docters Dashboard</h2>
-        <h2>Welcome, {{ user.first_name }} {{ user.last_name }}</h2>
 
-        {% if doctorInfo and doctorInfo.profile_pic %}
-            <img src="{{ doctorInfo.profile_pic.url }}" alt="Profile Picture" class="profile-pic">
-        {% else %}
-            <p style="text-align:center;">No profile picture uploaded</p>
-        {% endif %}
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="/">Home</a>
 
-        <div class="info">
-            <p><strong>First name:</strong> {{ user.first_name }}</p>
-            <p><strong>Last Name:</strong> {{ user.last_name }}</p>
-            <p><strong>Username:</strong> {{ user.username }}</p>
-            <p><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>Address:</strong></p>
-            <p>
-                {{ doctorInfo.line1 }}<br>
-                {{ doctorInfo.city }}, {{ doctorInfo.state }} - {{ doctorInfo.pincode }}
-            </p>
+        <div class="profile-menu">
+            {% if doctorInfo and doctorInfo.profile_pic %}
+                <img src="{{ doctorInfo.profile_pic.url }}" alt="Profile Picture" class="nav-profile-pic" id="profileMenuBtn">
+            {% else %}
+                <div class="no-profile-pic" id="profileMenuBtn">
+                    {{ user.first_name|first }}{{ user.last_name|first }}
+                </div>
+            {% endif %}
+
+            <div class="dropdown-content" id="profileDropdown">
+                <a href="/my-profile">My Profile</a>
+                <a href="/doctor/my-blogs">My Blogs</a>
+                <a href="/logout">Drafts</a>
+                <a href="/doctor/logout">Logout</a>
+
+            </div>
         </div>
-        <a href="/create-blog">Create Blog</a>
     </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard">
+        <h2>Welcome, Dr. {{ user.first_name }} {{ user.last_name }}</h2>
+        <p class="welcome">Manage your blogs and share your knowledge with patients around the world.</p>
+
+        <div class="buttons">
+            <button class="btn" onclick="window.location.href='/create-blog'">Create Blog</button>
+            <button class="btn" onclick="window.location.href='/my-blogs'">View My Blogs</button>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#profileMenuBtn').click(function(e) {
+                e.stopPropagation();
+                $('#profileDropdown').toggle();
+            });
+            
+            $(document).click(function() {
+                $('#profileDropdown').hide();
+            });
+            
+            $('#profileDropdown').click(function(e) {
+                e.stopPropagation();
+            });
+        });
+    </script>
+
 </body>
 </html>

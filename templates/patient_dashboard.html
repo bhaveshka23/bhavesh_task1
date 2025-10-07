@@ -6,58 +6,308 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
         }
-        .dashboard {
-            max-width: 600px;
-            margin: auto;
-            background: #fff;
-            padding: 20px;
-            border: 1px solid #ccc;
+
+        /* Navbar */
+        .navbar {
+            background-color: #1e88e5;
+            color: #fff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        h2 {
-            text-align: center;
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 20px;
+            font-weight: bold;
         }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         .profile-pic {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
-            display: block;
-            margin: 10px auto;
+            object-fit: cover;
         }
-        .info {
-            margin-top: 20px;
+
+        /* Main Container */
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 15px;
         }
-        .info p {
-            font-size: 16px;
-            line-height: 1.5;
+
+        h2 {
+            color: #1e88e5;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        /* Category Filter */
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .category-btn {
+            background: #e3ebf8;
+            border: none;
+            color: #1e88e5;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .category-btn.active {
+            background: #1e88e5;
+            color: #fff;
+        }
+
+        .category-btn:hover {
+            background: #166dc1;
+            color: #fff;
+        }
+
+        /* Blog Cards */
+        .blogs {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .blog-card {
+            background: #fff;
+            border: 1px solid #d9e3f2;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .blog-card-content {
+            padding: 15px;
+            flex: 1;
+        }
+
+        .blog-card h3 {
+            margin: 0 0 8px 0;
+            color: #1e88e5;
+            font-size: 18px;
+        }
+
+        .blog-card p {
+            margin: 0 0 10px 0;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .view-btn {
+            background-color: #1e88e5;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .view-btn:hover {
+            background-color: #166dc1;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 25px;
+            width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .modal-content h3 {
+            margin-top: 0;
+            color: #1e88e5;
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: #ccc;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .close-btn:hover {
+            background: #aaa;
         }
     </style>
 </head>
 <body>
-    <div class="dashboard">
-        <a href = "/">Home</a>
-        <h2>Patients Dashboard</h2>
-        <h2>Welcome, {{ user.first_name }} {{ user.last_name }}</h2>
 
-        {% if patientInfo and patientInfo.profile_pic %}
-            <img src="{{ patientInfo.profile_pic.url }}" alt="Profile Picture" class="profile-pic">
-        {% else %}
-            <p style="text-align:center;">No profile picture uploaded</p>
-        {% endif %}
-
-        <div class="info">
-            <p><strong>First name:</strong> {{ user.first_name }}</p>
-            <p><strong>Last Name:</strong> {{ user.last_name }}</p>
-            <p><strong>Username:</strong> {{ user.username }}</p>
-            <p><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>Address:</strong></p>
-            <p>
-                {{ patientInfo.line1 }}<br>
-                {{ patientInfo.city }}, {{ patientInfo.state }} - {{ patientInfo.pincode }}
-            </p>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div>
+            <a href="/">Home</a>
+        </div>
+        <div class="profile-section">
+            <span>{{ user.first_name }} {{ user.last_name }}</span>
+            {% if patientInfo and patientInfo.profile_pic %}
+                <img src="{{ patientInfo.profile_pic.url }}" alt="Profile Picture" class="profile-pic">
+            {% else %}
+                <img src="https://via.placeholder.com/35" alt="Profile Picture" class="profile-pic">
+            {% endif %}
+            <a href="/profile">Profile</a>
+            <a href="/patient/logout">Logout</a>
         </div>
     </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h2>Welcome, {{ user.first_name }}</h2>
+
+        <!-- Category Filter Buttons -->
+        <div class="categories">
+            <button class="category-btn active" data-category="all">All</button>
+            {% for cat in categories %}
+                <button class="category-btn" data-category="{{ cat.id }}">{{ cat.category }}</button>
+            {% endfor %}
+        </div>
+
+        <!-- Blog Cards -->
+        <div class="blogs" id="blogList">
+            {% for blog in blogs %}
+                {% if not blog.is_draft %}
+                    <div class="blog-card" data-category="{{ blog.category.id }}">
+                        {% if blog.image %}
+                            <img src="{{ blog.image.url }}" alt="{{ blog.title }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/400x200?text=No+Image" alt="No Image">
+                        {% endif %}
+                        <div class="blog-card-content">
+                            <h3>{{ blog.title }}</h3>
+                            <p>
+                                {% with blog.summary|truncatewords:15 as short_summary %}
+                                    {{ short_summary }}
+                                    {% if blog.summary|length > 15 %}...{% endif %}
+                                {% endwith %}
+                            </p>
+                            <button class="view-btn" data-title="{{ blog.title }}" data-image="{% if blog.image %}{{ blog.image.url }}{% endif %}" data-content="{{ blog.content|escapejs }}">View</button>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="blogModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModal">X</button>
+            <h3 id="modalTitle"></h3>
+            <img id="modalImage" src="" alt="">
+            <p id="modalContent"></p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Category Filter Logic
+        const buttons = document.querySelectorAll('.category-btn');
+        const blogs = document.querySelectorAll('.blog-card');
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const category = btn.getAttribute('data-category');
+
+                blogs.forEach(blog => {
+                    if (category === 'all' || blog.getAttribute('data-category') === category) {
+                        blog.style.display = 'flex';
+                    } else {
+                        blog.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Modal Logic
+        const modal = document.getElementById('blogModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalImage = document.getElementById('modalImage');
+        const modalContent = document.getElementById('modalContent');
+        const closeModal = document.getElementById('closeModal');
+
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                modalTitle.textContent = btn.getAttribute('data-title');
+                const imgSrc = btn.getAttribute('data-image');
+                if(imgSrc) {
+                    modalImage.src = imgSrc;
+                    modalImage.style.display = 'block';
+                } else {
+                    modalImage.style.display = 'none';
+                }
+                modalContent.textContent = btn.getAttribute('data-content');
+                modal.style.display = 'flex';
+            });
+        });
+
+        closeModal.onclick = () => modal.style.display = 'none';
+        window.onclick = function(event) {
+            if (event.target === modal) modal.style.display = 'none';
+        };
+    </script>
+
 </body>
 </html>

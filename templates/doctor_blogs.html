@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Blogs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef3fb;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #1e88e5;
+            color: #fff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            color: #1e88e5;
+            margin: 0;
+        }
+
+        .create-btn {
+            background: #1e88e5;
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .create-btn:hover {
+            background: #166dc1;
+        }
+
+        /* Category Filter */
+        .categories {
+            color: black;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background: #e3ebf8;
+            border: none;
+            color: #1e88e5;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .category-btn.active {
+            background: #1e88e5;
+            color: #fff;
+        }
+
+        .category-btn:hover {
+            background: #166dc1;
+            color: #fff;
+        }
+
+        /* Blog Cards */
+        .blogs {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .blog-card {
+            background: #f8faff;
+            border: 1px solid #d9e3f2;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .blog-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .blog-card-content {
+            padding: 15px;
+        }
+
+        .blog-card h3 {
+            color: #1e88e5;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .blog-card p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .status {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 13px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background-color: #e3ebf8;
+            color: #1e88e5;
+            font-weight: bold;
+        }
+
+        .status.draft {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        /* Popup Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 25px;
+            width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .modal-content h3 {
+            margin-top: 0;
+            color: #1e88e5;
+        }
+
+        .modal-content form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        input[type="text"], textarea, select {
+            padding: 8px;
+            border: 1px solid #000000ff;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .submit-btn, .cancel-btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .submit-btn {
+            background: #1e88e5;
+            color: #fff;
+        }
+
+        .cancel-btn {
+            background: #ccc;
+        }
+
+        .submit-btn:hover {
+            background: #166dc1;
+        }
+
+        .cancel-btn:hover {
+            background: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="/doctor/doctor-dashboard">Dashboard</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h2>My Blogs</h2>
+            <button class="create-btn" id="openModal">+ Create Blog</button>
+        </div>
+
+        <!-- Category Filter Buttons -->
+        <div class="categories">
+            <button class="category-btn active" data-category="all">All</button>
+            {% for cat in categories %}
+                <button class="category-btn" data-category="{{ cat.id|stringformat:"s" }}">{{ cat.category }}</button>
+            {% endfor %}
+        </div>
+
+        <!-- Blog Cards -->
+        <div class="blogs" id="blogList">
+            {% for blog in blogs %}
+                <div class="blog-card" data-category="{{ blog.category.id|stringformat:"s" }}">
+                    {% if blog.image %}
+                        <img src="{{ blog.image.url }}" alt="{{ blog.title }}">
+                    {% else %}
+                        <img src="https://via.placeholder.com/400x200?text=No+Image" alt="No Image">
+                    {% endif %}
+                    <div class="blog-card-content">
+                        <h3>{{ blog.title }}</h3>
+                        <p>
+                            {% with blog.summary|truncatewords:15 as short_summary %}
+                                {{ short_summary }}
+                                {% if blog.summary|length > 15 %}...{% endif %}
+                            {% endwith %}
+                        </p>
+                        {% if blog.is_draft %}
+                            <span class="status draft">Draft</span>
+                        {% else %}
+                            <span class="status">Published</span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Blog Creation Modal -->
+    <div class="modal" id="blogModal">
+        <div class="modal-content">
+            <h3>Create New Blog</h3>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="text" name="title" placeholder="Blog Title" required>
+                <select name="category" required>
+                    <option value="">Select Category</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat.id }}">{{ cat.category }}</option>
+                    {% endfor %}
+                </select>
+                <textarea name="summary" placeholder="Short Summary" rows="3" required></textarea>
+                <textarea name="content" placeholder="Full Content" rows="5" required></textarea>
+                <label>Upload Image:</label>
+                <input type="file" name="blogImage" accept="image/*">
+                <label>
+                    <input type="checkbox" name="is_draft"> Mark as Draft
+                </label>
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" id="closeModal">Cancel</button>
+                    <button type="submit" class="submit-btn">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Category Filter Logic
+        const buttons = document.querySelectorAll('.category-btn');
+        const blogs = document.querySelectorAll('.blog-card');
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const category = btn.getAttribute('data-category');
+
+                blogs.forEach(blog => {
+                    const blogCat = blog.getAttribute('data-category');
+                    
+                    if (category === 'all' || blogCat === category.toString()) {
+                        blog.style.display = 'block';
+                    } else {
+                        blog.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Modal Open/Close Logic
+        const modal = document.getElementById('blogModal');
+        const openModal = document.getElementById('openModal');
+        const closeModal = document.getElementById('closeModal');
+
+        openModal.onclick = () => modal.style.display = 'flex';
+        closeModal.onclick = () => modal.style.display = 'none';
+
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+    </script>
+
+</body>
+</html>

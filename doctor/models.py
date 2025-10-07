@@ -29,3 +29,6 @@ class BlogPost(models.Model):
     content = models.TextField()
     is_draft = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
