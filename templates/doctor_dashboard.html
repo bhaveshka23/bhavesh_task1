@@ -10,7 +10,6 @@
             padding: 0;
         }
 
-        /* Navbar */
         .navbar {
             background-color: #1e88e5;
             color: #fff;
@@ -83,7 +82,6 @@
             border-bottom: none;
         }
 
-        /* Dashboard Box */
         .dashboard {
             max-width: 600px;
             margin: 60px auto;
@@ -138,7 +136,6 @@
 </head>
 <body>
 
-    <!-- Navbar -->
     <div class="navbar">
         <a href="/">Home</a>
 
@@ -152,23 +149,21 @@
             {% endif %}
 
             <div class="dropdown-content" id="profileDropdown">
-                <a href="/my-profile">My Profile</a>
+                <a href="/doctor/my-profile">My Profile</a>
                 <a href="/doctor/my-blogs">My Blogs</a>
-                <a href="/logout">Drafts</a>
                 <a href="/doctor/logout">Logout</a>
 
             </div>
         </div>
     </div>
 
-    <!-- Dashboard -->
     <div class="dashboard">
         <h2>Welcome, Dr. {{ user.first_name }} {{ user.last_name }}</h2>
         <p class="welcome">Manage your blogs and share your knowledge with patients around the world.</p>
 
         <div class="buttons">
-            <button class="btn" onclick="window.location.href='/create-blog'">Create Blog</button>
-            <button class="btn" onclick="window.location.href='/my-blogs'">View My Blogs</button>
+    
+            <button class="btn" onclick="window.location.href='/doctor/my-blogs'">View My Blogs</button>
         </div>
     </div>
 

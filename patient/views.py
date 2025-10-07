@@ -1,11 +1,11 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect ,get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from .models import PatientData
 from doctor.models import BlogPost, Category
 from django.contrib.auth import authenticate , login , logout
 from django.contrib.auth.hashers import make_password
-# Create your views here.
+
 
 def patient_signup(request):
     if request.method == 'POST':
@@ -86,6 +86,14 @@ def patient_logout(request):
     logout(request)
     return redirect('/')
 
+def patientProfile(request):
+    patient = get_object_or_404(PatientData , user= request.user)
+
+    info = {
+        'patient':patient
+    }
+
+    return render(request,'patient_profile.html', info)
 
 
 

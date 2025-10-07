@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from .models import DoctorData , Category , BlogPost
@@ -25,12 +24,6 @@ def doctor_signup(request):
 
         if password != conf_password:
             return render(request, 'signup.html',{'error':'passwords do not Match ! Try again'})
-        
-        # if User.objects.filter(username = username).exists():
-        #     return render(request , 'signup.html',{'error': 'Username already exits !'})
-            
-        # if User.objects.filter(email = email).exists():
-        #     return render(request , 'signup.html',{'error':'email already exits !'})
 
         user = User.objects.create(
             first_name = first_name,
@@ -93,7 +86,7 @@ def MyBlog(request):
         content = request.POST.get('content')
         is_draft = True if request.POST.get('is_draft') else False
 
-        category = Category.objects.get(id=category_id) if category_id else None
+        category = Category.objects.get(id=category_id)
 
         BlogPost.objects.create(
             author = request.user,
@@ -109,12 +102,24 @@ def MyBlog(request):
 
 
     Blogs = BlogPost.objects.filter(author=request.user).select_related('category').order_by('-id')
+
     return render(request, 'doctor_blogs.html', { 'categories': categories, 'blogs': Blogs })
 
 
 def doctor_logout(request):
     logout(request)
     return redirect('/')
+
+
+def doctor_profile(request):
+    doctor = get_object_or_404(DoctorData, user=request.user)
+
+    info = {
+        'doctor' : doctor
+    }
+
+    return render(request ,'doctor_profile.html' , info)
+
 
 
 

@@ -77,8 +77,12 @@ WSGI_APPLICATION = 'Task1.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'django_tasks',
+        'USER': 'root',
+        'PASSWORD': 'CodenTis@23',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
@@ -126,3 +130,5 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+

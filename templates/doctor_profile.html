@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doctor Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        
+        .navbar {
+            background-color: #1e88e5;
+            color: #fff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+       
+        .profile-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-header h2 {
+            margin: 10px 0 5px 0;
+            color: #1e88e5;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .profile-info {
+            margin-top: 20px;
+        }
+
+        .profile-info p {
+            font-size: 16px;
+            margin: 8px 0;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #1e88e5;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #1e88e5;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            background-color: #166dc1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div>
+            <a href="/doctor/doctor-dashboard">Home</a>
+        </div>
+        <div>
+            <a href="/doctor/logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="profile-container">
+        {% if doctor.profile_pic %}
+            <img src="{{ doctor.profile_pic.url }}" alt="Profile Picture" class="profile-pic">
+        {% endif %}
+
+        <div class="profile-header">
+            <h2>{{ doctor.user.first_name }} {{ doctor.user.last_name }}</h2>
+            <p>Username: {{ doctor.user.username }}</p>
+        </div>
+
+        <div class="profile-info">
+            <p><span class="label">Email:</span> {{ doctor.user.email }}</p>
+
+            {% if doctor.line1 %}
+                <p><span class="label">Address:</span> {{ doctor.line1 }}, {{ doctor.city }}, {{ doctor.state }} - {{ doctor.pincode }}</p>
+            {% endif %}
+        </div>
+
+        
+    </div>
+
+</body>
+</html>

@@ -10,7 +10,6 @@
             padding: 0;
         }
 
-        /* Navbar */
         .navbar {
             background-color: #1e88e5;
             color: #fff;
@@ -57,7 +56,6 @@
             margin-bottom: 25px;
         }
 
-        /* Category Filter */
         .categories {
             display: flex;
             flex-wrap: wrap;
@@ -87,7 +85,6 @@
             color: #fff;
         }
 
-        /* Blog Cards */
         .blogs {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -141,7 +138,6 @@
             background-color: #166dc1;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -194,7 +190,7 @@
 </head>
 <body>
 
-    <!-- Navbar -->
+    
     <div class="navbar">
         <div>
             <a href="/">Home</a>
@@ -203,19 +199,15 @@
             <span>{{ user.first_name }} {{ user.last_name }}</span>
             {% if patientInfo and patientInfo.profile_pic %}
                 <img src="{{ patientInfo.profile_pic.url }}" alt="Profile Picture" class="profile-pic">
-            {% else %}
-                <img src="https://via.placeholder.com/35" alt="Profile Picture" class="profile-pic">
             {% endif %}
-            <a href="/profile">Profile</a>
+            <a href="/patient/my-profile">Profile</a>
             <a href="/patient/logout">Logout</a>
         </div>
     </div>
 
-    <!-- Main Content -->
+   
     <div class="container">
         <h2>Welcome, {{ user.first_name }}</h2>
-
-        <!-- Category Filter Buttons -->
         <div class="categories">
             <button class="category-btn active" data-category="all">All</button>
             {% for cat in categories %}
@@ -223,15 +215,12 @@
             {% endfor %}
         </div>
 
-        <!-- Blog Cards -->
         <div class="blogs" id="blogList">
             {% for blog in blogs %}
                 {% if not blog.is_draft %}
-                    <div class="blog-card" data-category="{{ blog.category.id }}">
+                    <div class="blog-card" data-category="{% if blog.category %}{{ blog.category.id }}{% else %}none{% endif %}">
                         {% if blog.image %}
                             <img src="{{ blog.image.url }}" alt="{{ blog.title }}">
-                        {% else %}
-                            <img src="https://via.placeholder.com/400x200?text=No+Image" alt="No Image">
                         {% endif %}
                         <div class="blog-card-content">
                             <h3>{{ blog.title }}</h3>
@@ -259,9 +248,7 @@
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script>
-        // Category Filter Logic
+    <script> 
         const buttons = document.querySelectorAll('.category-btn');
         const blogs = document.querySelectorAll('.blog-card');
 
@@ -269,10 +256,11 @@
             btn.addEventListener('click', () => {
                 buttons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                const category = btn.getAttribute('data-category');
+                const category = (btn.getAttribute('data-category') || '').toString().trim();
 
                 blogs.forEach(blog => {
-                    if (category === 'all' || blog.getAttribute('data-category') === category) {
+                    const blogCat = (blog.getAttribute('data-category') || '').toString().trim();
+                    if (category === 'all' || blogCat === category) {
                         blog.style.display = 'flex';
                     } else {
                         blog.style.display = 'none';
@@ -281,7 +269,6 @@
             });
         });
 
-        // Modal Logic
         const modal = document.getElementById('blogModal');
         const modalTitle = document.getElementById('modalTitle');
         const modalImage = document.getElementById('modalImage');
